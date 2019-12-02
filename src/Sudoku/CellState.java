@@ -1,14 +1,17 @@
 package Sudoku;
 
+import java.util.HashSet;
 import java.util.Set;
 
-public class CellState {
+public class CellState implements Cloneable {
     public CellState() {
         this.cellValue = CellState.BLANK_CELL;
+        this.possibleValues = new HashSet<Integer>();
     }
 
     public CellState(int cellValue) {
         this.cellValue = cellValue;
+        this.possibleValues = new HashSet<Integer>();
     }
 
     public CellState(int cellValue, Set<Integer> possibleValues) {
@@ -30,6 +33,10 @@ public class CellState {
     @Override
     public int hashCode() {
         return this.cellValue*100 + this.possibleValues.hashCode();
+    }
+
+    public CellState clone() {
+        return new CellState(this.cellValue, new HashSet<Integer>(this.possibleValues));
     }
 
     public boolean isBlankCell() {
