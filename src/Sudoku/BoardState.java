@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BoardState {
+public class BoardState implements Cloneable {
     public BoardState() {
     }
 
@@ -53,6 +53,22 @@ public class BoardState {
 
     public static int getSquareIndex(int i) {
         return BoardState.getColumnStartIndex(i) / 3 + 3 * (BoardState.getRowStartIndex(i) / 3);
+    }
+
+    public BoardState clone() {
+        BoardState clone = new BoardState();
+        for(int i = 0; i < this.board.length; i++) {
+            clone.getCellAtIndex(i).setValue(this.board[i].getValue());
+            Set<Integer> possibleValues = this.board[i].getPossibleValues();
+            for(Integer possibleValue : possibleValues)
+                clone.getCellAtIndex(i).addPossibleValue(possibleValue);
+        }
+
+        return clone;
+    }
+
+    public CellState getCellAtIndex(int i) {
+        return this.board[i];
     }
 
     public boolean isBlankCell(int i) {
