@@ -59,11 +59,33 @@ public class Game {
     }
 
     private boolean isBoardStateInvalid(BoardState state) {
+        for (int i = 0; i < 81; i++) {
+            CellState cellState = state.getCellAtIndex(i);
+            if (cellState.isBlankCell() && cellState.getPossibleValues().size() == 0)
+                return true;
+        }
 
+        return false;
     }
 
-    private void pushBranches(BoardState nextState, Stack<BoardState> branches) {
+    private void pushBranches(BoardState currentState, Stack<BoardState> branches) {
+        for (int level = 2; level <= 9; level++) {
+            for (int i = 0; i < 81; i++) {
+                CellState cellState = currentState.getCellAtIndex(i);
+                if (cellState.isBlankCell()) {
+                    Set<Integer> possibleValues = cellState.getPossibleValues();
+                    if (possibleValues.size() == level) {
+                        for (Integer possibleValue : possibleValues) {
+                            BoardState branch = currentState.clone();
+                            branch.getCellAtIndex(i).setValue(possibleValue);
+                            branches.push(branch);
+                        }
 
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     private BoardState startState;
